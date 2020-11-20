@@ -1,65 +1,79 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useEffect, useState } from "react"
+import Head from "next/head"
+import Navbar from "../components/navbar/navbar.js"
+import Pagebar from "../components/pagebar/pagebar.js"
+import Content from "../components/content/content.js"
+import axios from "axios"
 
 export default function Home() {
+  const [shopData, setShopData] = useState()
+  const [categoryList, setCategoryList] = useState()
+  const [initialMerchantsLists, setInitialMerchantsLists] = useState()
+  const [displayMerchantsList, setDisplayMerchantsList] = useState()
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด")
+  const [selectedSubCategory, setSelectedSubCategory] = useState("ทั้งหมด")
+  const [selectedProvince, setSelectedProvince] = useState("closest")
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const showDrawer = () => {
+    setIsDrawerOpen(true)
+  }
+
+  const onClose = () => {
+    setIsDrawerOpen(false)
+  }
+
+  useEffect(() => {
+    const getShopData = async () => {
+      const { data } = await axios.get("https://panjs.com/ywc18.json")
+      setShopData(data)
+      setInitialMerchantsLists(data.merchants)
+      setDisplayMerchantsList(data.merchants)
+      setCategoryList(data.categories)
+    }
+    getShopData()
+  }, [])
+
+  useEffect(() => {
+    if (!initialMerchantsLists) return
+    if (selectedProvince === "closest") {
+      setDisplayMerchantsList([...initialMerchantsLists])
+      return
+    }
+    const newMerchantsList = JSON.parse(JSON.stringify(initialMerchantsLists))
+    setDisplayMerchantsList([
+      ...newMerchantsList.filter(
+        (merchant) => merchant.addressProvinceName === selectedProvince
+      ),
+    ])
+    console.log(selectedProvince)
+  }, [selectedProvince])
   return (
-    <div className={styles.container}>
+    <>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>คนละครึ่ง</title>
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+      <Navbar
+        shopData={shopData}
+        categoryList={categoryList}
+        setSelectedCategory={setSelectedCategory}
+        showDrawer={showDrawer}
+        setSelectedProvince={setSelectedProvince}
+        selectedProvince={selectedProvince}
+      />
+      <Pagebar />
+      <Content
+        shopData={shopData}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        isDrawerOpen={isDrawerOpen}
+        onClose={onClose}
+        displayMerchantsList={displayMerchantsList}
+        setSelectedSubCategory={setSelectedSubCategory}
+        selectedSubCategory={selectedSubCategory}
+        setSelectedProvince={setSelectedProvince}
+        selectedProvince={selectedProvince}
+      />
+    </>
   )
 }
