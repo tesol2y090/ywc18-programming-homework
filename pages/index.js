@@ -52,6 +52,7 @@ export default function Home() {
     <>
       <Head>
         <title>คนละครึ่ง</title>
+        <link href='/static/styles.css' rel='stylesheet' />
       </Head>
       <Navbar
         shopData={shopData}
