@@ -15,5 +15,5 @@ npm install
 npm run dev
 
 # Build to production
-npm run export
+npm run build
 ```
