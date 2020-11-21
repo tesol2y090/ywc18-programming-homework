@@ -5,6 +5,9 @@
 - เนื้อหาส่วนใดที่ API ไม่ได้ส่งมา อนุญาตให้ระบุแบบ Hard coded ลงไปใน HTML ได้
 - นำ Source Code ขึ้นไปบน GitHub และ Deploy โดยใช้ GitHub Pages
 
+# try on
+https://konlakueng-ywc.netlify.app
+
 ## Build Setup
 clone this repository and run these command
 ```bash
