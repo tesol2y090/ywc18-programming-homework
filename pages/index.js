@@ -36,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!initialMerchantsLists) return
-    if (selectedProvince === "closest") {
+    if (selectedProvince === "closest" || selectedProvince === "all-place") {
       setDisplayMerchantsList([...initialMerchantsLists])
       return
     }

@@ -15,5 +15,7 @@ module.exports = withImages(
     env: {
       ENV: process.env.ENV,
     },
+    basePath: "/ywc18-programming-homework",
+    assetPrefix: "/ywc18-programming-homework/",
   })
 )
